@@ -1,0 +1,55 @@
+{
+  "name": "any-schema",
+  "version": "1.0.0",
+  "description": "Drop in any database schema (SQL DDL, Prisma, JSON Schema, OpenAPI, Salesforce, MongoDB, CSV) and get a plain-English guide, ER diagram, review findings and a privacy scan.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "any-schema": "bin/any-schema.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "export-queries",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test test/*.test.js",
+    "generate": "node scripts/generate.mjs",
+    "build": "node scripts/generate.mjs && node scripts/build.mjs",
+    "check": "node scripts/generate.mjs --check && node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "database",
+    "schema",
+    "documentation",
+    "erd",
+    "er-diagram",
+    "mermaid",
+    "dbml",
+    "postgres",
+    "mysql",
+    "sql-server",
+    "oracle",
+    "snowflake",
+    "bigquery",
+    "salesforce",
+    "mongodb",
+    "prisma",
+    "data-dictionary"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityakilari/any-schema.git"
+  },
+  "homepage": "https://adityakilari.github.io/any-schema/",
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.10",
+    "esbuild": "^0.25.0"
+  }
+}

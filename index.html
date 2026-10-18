@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Any Schema</title>
+<meta name="description" content="Drop in a SQL DDL, Prisma, JSON Schema, Salesforce, MongoDB or CSV schema and get a plain-English guide, ER diagram, review findings and a privacy scan. Runs in your browser.">
+<!-- build:head -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<!-- /build:head -->
+<link rel="stylesheet" href="src/ui/styles.css">
+</head>
+<body>
+<!-- build:body -->
+<!-- ================= HOME ================= -->
+<main class="home wrap" id="home">
+  <header class="home-head">
+    <div class="eyebrow">Any Schema <span id="version"></span> · <a href="https://github.com/adityakilari/any-schema" target="_blank" rel="noopener">Source on GitHub</a></div>
+    <h1>Understand any database schema</h1>
+    <p>Load a schema file and get a separate guide for it: a relationship map, a plain-English explanation of every table, column and relationship, full documentation, and a review. Your file is read in this browser tab only: it is never uploaded, and nothing is saved after you close or reload the page.</p>
+  </header>
+
+  <div class="home-grid">
+    <section class="drop" id="drop" aria-label="Load a schema file">
+      <h2>Drop your schema file here</h2>
+      <p>One file, or several at once (for example one CSV per table).</p>
+      <div class="fmt"><span>.sql DDL</span><span>schema.prisma</span><span>JSON Schema / OpenAPI</span><span>Salesforce</span><span>MongoDB</span><span>column list .json / .csv</span><span>data .csv</span></div>
+      <div class="row">
+        <label class="btn" for="file">Choose files</label>
+        <input id="file" type="file" multiple hidden accept=".sql,.ddl,.prisma,.json,.jsonl,.csv,.tsv,.txt">
+        <button class="btn ghost" id="toggle-paste" type="button">Paste text instead</button>
+      </div>
+      <div id="paste-wrap" class="paste" hidden>
+        <textarea id="paste" spellcheck="false" aria-label="Paste a schema" placeholder="CREATE TABLE customers (&#10;  id bigint PRIMARY KEY,&#10;  email text NOT NULL UNIQUE&#10;);"></textarea>
+        <div class="row">
+          <label for="format" class="tag">Format</label>
+          <select id="format"></select>
+          <button class="btn" id="explain" type="button">Open the guide</button>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="samples">
+      <h3>Or open a sample</h3>
+      <div class="sample-list" id="samples"></div>
+    </section>
+  </div>
+
+  <section class="guides" id="guides" aria-label="Export your schema">
+    <div class="home-sub">
+      <h2>Get the schema file out of your database</h2>
+      <p>Each query is read-only and returns structure only, never row data. Run it in DBeaver, SQL Developer, psql or your usual tool, export the result as JSON or CSV, and drop the file above.</p>
+    </div>
+    <div id="panel-guides"></div>
+  </section>
+</main>
+
+<!-- ================= ATLAS ================= -->
+<div class="atlas wrap" id="atlas" hidden>
+  <header class="top">
+    <div class="top-title">
+      <div class="eyebrow">Any Schema · <span id="srcfile"></span></div>
+      <h1 id="title" tabindex="-1"></h1>
+    </div>
+    <div class="topbtns">
+      <div class="stats" id="stats"></div>
+      <div class="row">
+        <button class="btn" id="load-new" type="button">Load another schema</button>
+      </div>
+    </div>
+  </header>
+  <div class="loaded-banner" id="loaded-banner" role="status" hidden>
+    <span class="tick" aria-hidden="true">✓</span>
+    <p id="loaded-text"></p>
+    <div class="row">
+      <button class="btn small" type="button" data-jump="view-map">Go to the map</button>
+      <button class="btn ghost small" type="button" data-view="relationships">See relationships</button>
+      <button class="btn ghost small" type="button" data-view="docs">Read the documentation</button>
+      <button class="close" type="button" id="banner-close" aria-label="Dismiss">×</button>
+    </div>
+  </div>
+  <p class="lede" id="lede"></p>
+
+  <div class="bar">
+    <div class="tabs" role="tablist" aria-label="Views">
+      <button role="tab" data-view="map" type="button">Map</button>
+      <button role="tab" data-view="relationships" type="button">Relationships</button>
+      <button role="tab" data-view="docs" type="button">Documentation</button>
+      <button role="tab" data-view="review" type="button">Review<span class="count" id="review-count"></span></button>
+      <button role="tab" data-view="export" type="button">Export</button>
+    </div>
+    <div class="search">
+      <input id="q" type="search" placeholder="Find a table or column" autocomplete="off" aria-label="Find a table or column">
+      <div class="results" id="results" hidden></div>
+    </div>
+  </div>
+
+  <nav class="mods" id="mods" aria-label="Modules"></nav>
+
+  <section class="view stage" id="view-map">
+    <div class="panel">
+      <div class="panel-h">
+        <h2 id="mod-title"></h2>
+        <div class="legend">
+          <span><i></i>child → parent</span>
+          <span><i class="x"></i>inferred from names</span>
+          <span><i class="box"></i>in another module</span>
+          <label class="tag"><input type="checkbox" id="show-audit-links"> audit links</label>
+        </div>
+      </div>
+      <div class="diagram" id="diagram"></div>
+    </div>
+    <aside class="panel card" id="card"></aside>
+  </section>
+  <section class="view" id="view-relationships" hidden></section>
+  <section class="view docs" id="view-docs" hidden></section>
+  <section class="view" id="view-review" hidden></section>
+  <section class="view" id="view-export" hidden></section>
+</div>
+
+<button class="jump" id="jump" type="button" hidden>↓ Your schema guide is ready: show it</button>
+
+<footer class="footer wrap">Any Schema is open source (MIT). Explanations come from names, types and constraints, so treat them as a first draft and check anything important.</footer>
+<!-- /build:body -->
+<script type="module" src="src/ui/app.js"></script>
+</body>
+</html>

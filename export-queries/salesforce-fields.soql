@@ -1,0 +1,4 @@
+SELECT EntityDefinition.QualifiedApiName, QualifiedApiName, Label, DataType, Length, Precision, Scale, IsNillable, IsIndexed, RelationshipName, Description
+FROM FieldDefinition
+WHERE EntityDefinition.QualifiedApiName IN ('Account', 'Contact', 'Opportunity')
+ORDER BY EntityDefinition.QualifiedApiName, QualifiedApiName
