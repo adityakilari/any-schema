@@ -1,0 +1,12 @@
+node_modules/
+_site/
+.DS_Store
+*.log
+# your own exports - keep real schemas out of the repo
+schema.csv
+schema.tsv
+schema.sql
+salesforce-schema.json
+mongo-schema.json
+SCHEMA.md
+!samples/**
