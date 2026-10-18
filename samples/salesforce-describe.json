@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Account",
+    "label": "Account",
+    "labelPlural": "Accounts",
+    "custom": false,
+    "keyPrefix": "001",
+    "queryable": true,
+    "fields": [
+      { "name": "Id", "label": "Account ID", "type": "id", "length": 18, "nillable": false, "unique": false, "idLookup": true, "custom": false },
+      { "name": "IsDeleted", "label": "Deleted", "type": "boolean", "nillable": false, "custom": false },
+      { "name": "Name", "label": "Account Name", "type": "string", "length": 255, "nillable": false, "nameField": true, "idLookup": true, "custom": false },
+      { "name": "Type", "label": "Account Type", "type": "picklist", "length": 255, "nillable": true, "custom": false,
+        "picklistValues": [ { "value": "Prospect", "active": true }, { "value": "Customer - Direct", "active": true }, { "value": "Customer - Channel", "active": true }, { "value": "Partner", "active": true }, { "value": "Other", "active": true } ] },
+      { "name": "ParentId", "label": "Parent Account ID", "type": "reference", "nillable": true, "referenceTo": ["Account"], "relationshipName": "Parent", "custom": false },
+      { "name": "BillingStreet", "label": "Billing Street", "type": "textarea", "length": 255, "nillable": true, "custom": false },
+      { "name": "BillingCity", "label": "Billing City", "type": "string", "length": 40, "nillable": true, "custom": false },
+      { "name": "BillingPostalCode", "label": "Billing Zip/Postal Code", "type": "string", "length": 20, "nillable": true, "custom": false },
+      { "name": "BillingCountry", "label": "Billing Country", "type": "string", "length": 80, "nillable": true, "custom": false },
+      { "name": "Phone", "label": "Account Phone", "type": "phone", "length": 40, "nillable": true, "custom": false },
+      { "name": "Website", "label": "Website", "type": "url", "length": 255, "nillable": true, "custom": false },
+      { "name": "Industry", "label": "Industry", "type": "picklist", "length": 255, "nillable": true, "custom": false,
+        "picklistValues": [ { "value": "Banking", "active": true }, { "value": "Education", "active": true }, { "value": "Healthcare", "active": true }, { "value": "Manufacturing", "active": true }, { "value": "Retail", "active": true }, { "value": "Technology", "active": true } ] },
+      { "name": "AnnualRevenue", "label": "Annual Revenue", "type": "currency", "precision": 18, "scale": 0, "nillable": true, "custom": false },
+      { "name": "NumberOfEmployees", "label": "Employees", "type": "int", "nillable": true, "custom": false },
+      { "name": "OwnerId", "label": "Owner ID", "type": "reference", "nillable": false, "referenceTo": ["User"], "relationshipName": "Owner", "custom": false },
+      { "name": "CreatedDate", "label": "Created Date", "type": "datetime", "nillable": false, "custom": false },
+      { "name": "CreatedById", "label": "Created By ID", "type": "reference", "nillable": false, "referenceTo": ["User"], "relationshipName": "CreatedBy", "custom": false },
+      { "name": "LastModifiedDate", "label": "Last Modified Date", "type": "datetime", "nillable": false, "custom": false },
+      { "name": "LastModifiedById", "label": "Last Modified By ID", "type": "reference", "nillable": false, "referenceTo": ["User"], "relationshipName": "LastModifiedBy", "custom": false },
+      { "name": "SystemModstamp", "label": "System Modstamp", "type": "datetime", "nillable": false, "custom": false },
+      { "name": "Customer_Tier__c", "label": "Customer Tier", "type": "picklist", "nillable": true, "custom": true, "inlineHelpText": "Service tier that drives SLA response times.",
+        "picklistValues": [ { "value": "Bronze", "active": true }, { "value": "Silver", "active": true }, { "value": "Gold", "active": true }, { "value": "Platinum", "active": false } ] },
+      { "name": "ERP_Customer_Number__c", "label": "ERP Customer Number", "type": "string", "length": 30, "nillable": true, "unique": true, "externalId": true, "idLookup": true, "custom": true }
+    ]
+  },
+  {
+    "name": "Contact",
+    "label": "Contact",
+    "labelPlural": "Contacts",
+    "custom": false,
+    "keyPrefix": "003",
+    "fields": [
+      { "name": "Id", "label": "Contact ID", "type": "id", "length": 18, "nillable": false, "custom": false },
+      { "name": "AccountId", "label": "Account ID", "type": "reference", "nillable": true, "referenceTo": ["Account"], "relationshipName": "Account", "custom": false },
+      { "name": "FirstName", "label": "First Name", "type": "string", "length": 40, "nillable": true, "custom": false },
+      { "name": "LastName", "label": "Last Name", "type": "string", "length": 80, "nillable": false, "custom": false },
+      { "name": "Email", "label": "Email", "type": "email", "length": 80, "nillable": true, "custom": false },
+      { "name": "Phone", "label": "Business Phone", "type": "phone", "length": 40, "nillable": true, "custom": false },
+      { "name": "Birthdate", "label": "Birthdate", "type": "date", "nillable": true, "custom": false },
+      { "name": "ReportsToId", "label": "Reports To ID", "type": "reference", "nillable": true, "referenceTo": ["Contact"], "relationshipName": "ReportsTo", "custom": false },
+      { "name": "HasOptedOutOfEmail", "label": "Email Opt Out", "type": "boolean", "nillable": false, "defaultValue": false, "custom": false },
+      { "name": "OwnerId", "label": "Owner ID", "type": "reference", "nillable": false, "referenceTo": ["User"], "relationshipName": "Owner", "custom": false },
+      { "name": "CreatedDate", "label": "Created Date", "type": "datetime", "nillable": false, "custom": false }
+    ]
+  },
+  {
+    "name": "Opportunity",
+    "label": "Opportunity",
+    "labelPlural": "Opportunities",
+    "custom": false,
+    "keyPrefix": "006",
+    "fields": [
+      { "name": "Id", "label": "Opportunity ID", "type": "id", "length": 18, "nillable": false, "custom": false },
+      { "name": "AccountId", "label": "Account ID", "type": "reference", "nillable": true, "referenceTo": ["Account"], "relationshipName": "Account", "custom": false },
+      { "name": "Name", "label": "Name", "type": "string", "length": 120, "nillable": false, "nameField": true, "custom": false },
+      { "name": "StageName", "label": "Stage", "type": "picklist", "nillable": false, "custom": false,
+        "picklistValues": [ { "value": "Prospecting", "active": true }, { "value": "Qualification", "active": true }, { "value": "Proposal/Price Quote", "active": true }, { "value": "Negotiation/Review", "active": true }, { "value": "Closed Won", "active": true }, { "value": "Closed Lost", "active": true } ] },
+      { "name": "Amount", "label": "Amount", "type": "currency", "precision": 18, "scale": 2, "nillable": true, "custom": false },
+      { "name": "Probability", "label": "Probability (%)", "type": "percent", "precision": 3, "scale": 0, "nillable": true, "custom": false },
+      { "name": "ExpectedRevenue", "label": "Expected Amount", "type": "currency", "precision": 18, "scale": 2, "nillable": true, "calculated": true, "calculatedFormula": "Amount * Probability", "custom": false },
+      { "name": "CloseDate", "label": "Close Date", "type": "date", "nillable": false, "custom": false },
+      { "name": "IsClosed", "label": "Closed", "type": "boolean", "nillable": false, "custom": false },
+      { "name": "IsWon", "label": "Won", "type": "boolean", "nillable": false, "custom": false },
+      { "name": "OwnerId", "label": "Owner ID", "type": "reference", "nillable": false, "referenceTo": ["User"], "relationshipName": "Owner", "custom": false },
+      { "name": "CreatedDate", "label": "Created Date", "type": "datetime", "nillable": false, "custom": false }
+    ]
+  },
+  {
+    "name": "Invoice__c",
+    "label": "Invoice",
+    "labelPlural": "Invoices",
+    "custom": true,
+    "keyPrefix": "a01",
+    "fields": [
+      { "name": "Id", "label": "Record ID", "type": "id", "length": 18, "nillable": false, "custom": false },
+      { "name": "Name", "label": "Invoice Number", "type": "string", "length": 80, "nillable": true, "autoNumber": true, "nameField": true, "custom": false },
+      { "name": "Opportunity__c", "label": "Opportunity", "type": "reference", "nillable": false, "referenceTo": ["Opportunity"], "relationshipName": "Opportunity__r", "cascadeDelete": true, "relationshipOrder": 0, "custom": true },
+      { "name": "Bill_To__c", "label": "Bill To", "type": "reference", "nillable": true, "referenceTo": ["Contact"], "relationshipName": "Bill_To__r", "custom": true },
+      { "name": "Total__c", "label": "Total", "type": "currency", "precision": 16, "scale": 2, "nillable": true, "custom": true },
+      { "name": "Status__c", "label": "Status", "type": "picklist", "nillable": true, "custom": true, "defaultValue": "Draft",
+        "picklistValues": [ { "value": "Draft", "active": true }, { "value": "Sent", "active": true }, { "value": "Paid", "active": true }, { "value": "Void", "active": true } ] },
+      { "name": "Due_Date__c", "label": "Due Date", "type": "date", "nillable": true, "custom": true },
+      { "name": "Days_Overdue__c", "label": "Days Overdue", "type": "double", "precision": 18, "scale": 0, "nillable": true, "calculated": true, "calculatedFormula": "IF(ISPICKVAL(Status__c, 'Paid'), 0, TODAY() - Due_Date__c)", "custom": true },
+      { "name": "WhoId__c", "label": "Related To", "type": "reference", "nillable": true, "referenceTo": ["Contact", "Lead"], "relationshipName": "Who__r", "custom": true }
+    ]
+  }
+]

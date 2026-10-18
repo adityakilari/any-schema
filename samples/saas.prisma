@@ -1,0 +1,115 @@
+// Multi-tenant SaaS app  (prisma/schema.prisma)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// A customer company. Every other record belongs to exactly one organization.
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  plan      Plan     @default(FREE)
+  createdAt DateTime @default(now()) @map("created_at")
+  members   Membership[]
+  projects  Project[]
+  invoices  Invoice[]
+
+  @@map("organizations")
+}
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique
+  name          String?
+  passwordHash  String?   @map("password_hash")
+  emailVerified DateTime? @map("email_verified")
+  lastLoginAt   DateTime? @map("last_login_at")
+  memberships   Membership[]
+  tasks         Task[]    @relation("assignee")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+/// Which users belong to which organization, and with what role.
+model Membership {
+  organizationId String       @map("organization_id")
+  userId         String       @map("user_id") @db.Uuid
+  role           Role         @default(MEMBER)
+  joinedAt       DateTime     @default(now()) @map("joined_at")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([organizationId, userId])
+  @@map("memberships")
+}
+
+model Project {
+  id             Int          @id @default(autoincrement())
+  organizationId String       @map("organization_id")
+  name           String
+  description    String?
+  archived       Boolean      @default(false)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  tasks          Task[]
+
+  @@index([organizationId])
+  @@map("projects")
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  projectId   Int        @map("project_id")
+  assigneeId  String?    @map("assignee_id") @db.Uuid
+  title       String     @db.VarChar(200)
+  status      TaskStatus @default(TODO)
+  priority    Int        @default(3)
+  dueDate     DateTime?  @map("due_date") @db.Date
+  estimate    Float?
+  metadata    Json?
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee    User?      @relation("assignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  @@index([projectId, status])
+  @@map("tasks")
+}
+
+model Invoice {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  number         String       @unique
+  amountCents    Int          @map("amount_cents")
+  currency       String       @default("usd") @db.Char(3)
+  status         String       @default("open")
+  issuedAt       DateTime     @default(now()) @map("issued_at")
+  paidAt         DateTime?    @map("paid_at")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@map("invoices")
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+}

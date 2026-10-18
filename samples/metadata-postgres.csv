@@ -1,0 +1,80 @@
+table_schema,table_name,table_type,ordinal_position,column_name,data_type,is_nullable,column_default,is_primary_key,is_unique,is_auto_increment,is_indexed,fk_constraint_name,fk_ref_schema,fk_ref_table,fk_ref_column,enum_values,column_comment,table_comment
+public,addresses,TABLE,1,id,bigint,NO,,YES,NO,NO,YES,,,,,,,
+public,addresses,TABLE,2,customer_id,bigint,NO,,NO,NO,NO,NO,addresses_customer_id_fkey,public,customers,id,,,
+public,addresses,TABLE,3,label,character varying(50),YES,,NO,NO,NO,NO,,,,,,,
+public,addresses,TABLE,4,street,character varying(255),NO,,NO,NO,NO,NO,,,,,,,
+public,addresses,TABLE,5,city,character varying(100),NO,,NO,NO,NO,NO,,,,,,,
+public,addresses,TABLE,6,postal_code,character varying(20),YES,,NO,NO,NO,NO,,,,,,,
+public,addresses,TABLE,7,country_code,character(2),NO,,NO,NO,NO,NO,,,,,,,
+public,addresses,TABLE,8,is_default,boolean,NO,false,NO,NO,NO,NO,,,,,,,
+public,audit_log,TABLE,1,occurred_at,timestamp with time zone,NO,now(),NO,NO,NO,NO,,,,,,,
+public,audit_log,TABLE,2,actor_id,bigint,YES,,NO,NO,NO,NO,,,,,,,
+public,audit_log,TABLE,3,entity,character varying(50),NO,,NO,NO,NO,YES,,,,,,,
+public,audit_log,TABLE,4,entity_id,bigint,NO,,NO,NO,NO,NO,,,,,,,
+public,audit_log,TABLE,5,action,character varying(20),NO,,NO,NO,NO,NO,,,,,,,
+public,audit_log,TABLE,6,changes,jsonb,YES,,NO,NO,NO,NO,,,,,,,
+public,categories,TABLE,1,id,integer,NO,,YES,NO,NO,YES,,,,,,,
+public,categories,TABLE,2,parent_id,integer,YES,,NO,NO,NO,NO,categories_parent_id_fkey,public,categories,id,,,
+public,categories,TABLE,3,name,character varying(100),NO,,NO,NO,NO,NO,,,,,,,
+public,categories,TABLE,4,slug,character varying(120),NO,,NO,YES,NO,YES,,,,,,,
+public,customer_order_totals,VIEW,1,customer_id,bigint,YES,,NO,NO,NO,NO,,,,,,,
+public,customer_order_totals,VIEW,2,email,character varying(255),YES,,NO,NO,NO,NO,,,,,,,
+public,customer_order_totals,VIEW,3,order_count,bigint,YES,,NO,NO,NO,NO,,,,,,,
+public,customer_order_totals,VIEW,4,lifetime_value,numeric,YES,,NO,NO,NO,NO,,,,,,,
+public,customers,TABLE,1,id,bigint,NO,nextval('public.customers_id_seq'::regclass),YES,NO,YES,YES,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,2,email,character varying(255),NO,,NO,YES,NO,YES,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,3,first_name,character varying(100),YES,,NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,4,last_name,character varying(100),YES,,NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,5,phone,character varying(30),YES,,NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,6,date_of_birth,date,YES,,NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,7,password,character varying(255),YES,,NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,8,marketing_opt_in,boolean,NO,false,NO,NO,NO,NO,,,,,,Consent to receive marketing email (GDPR).,People who have created an account in the web shop.
+public,customers,TABLE,9,created_at,timestamp with time zone,NO,now(),NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,10,updated_at,timestamp with time zone,NO,now(),NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,customers,TABLE,11,deleted_at,timestamp with time zone,YES,,NO,NO,NO,NO,,,,,,,People who have created an account in the web shop.
+public,order_items,TABLE,1,id,bigint,NO,nextval('public.order_items_id_seq'::regclass),YES,NO,YES,YES,,,,,,,
+public,order_items,TABLE,2,order_id,bigint,NO,,NO,NO,NO,YES,order_items_order_id_fkey,public,orders,id,,,
+public,order_items,TABLE,3,product_id,bigint,NO,,NO,NO,NO,NO,order_items_product_id_fkey,public,products,id,,,
+public,order_items,TABLE,4,quantity,integer,NO,,NO,NO,NO,NO,,,,,,,
+public,order_items,TABLE,5,unit_price,"numeric(12,2)",NO,,NO,NO,NO,NO,,,,,,,
+public,order_items,TABLE,6,discount,"numeric(12,2)",NO,0,NO,NO,NO,NO,,,,,,,
+public,orders,TABLE,1,id,bigint,NO,nextval('public.orders_id_seq'::regclass),YES,NO,YES,YES,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,2,customer_id,bigint,NO,,NO,NO,NO,YES,orders_customer_id_fkey,public,customers,id,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,3,shipping_address_id,bigint,YES,,NO,NO,NO,NO,orders_shipping_address_id_fkey,public,addresses,id,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,4,status,public.order_status,NO,'pending'::public.order_status,NO,NO,NO,NO,,,,,pending|paid|shipped|delivered|cancelled|refunded,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,5,subtotal,"numeric(12,2)",NO,,NO,NO,NO,NO,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,6,tax_amount,"numeric(12,2)",NO,0,NO,NO,NO,NO,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,7,total,"numeric(12,2)",NO,,NO,NO,NO,NO,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,8,currency,character(3),NO,'USD'::bpchar,NO,NO,NO,NO,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,9,placed_at,timestamp with time zone,NO,now(),NO,NO,NO,NO,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,10,shipped_at,timestamp with time zone,YES,,NO,NO,NO,NO,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,orders,TABLE,11,notes,text,YES,,NO,NO,NO,NO,,,,,,,A checkout by a customer. Totals are snapshotted at purchase time.
+public,payments,TABLE,1,id,bigint,NO,,YES,NO,NO,YES,,,,,,,
+public,payments,TABLE,2,order_id,bigint,NO,,NO,NO,NO,NO,payments_order_id_fkey,public,orders,id,,,
+public,payments,TABLE,3,provider,character varying(30),NO,,NO,NO,NO,NO,,,,,,,
+public,payments,TABLE,4,provider_reference,character varying(100),YES,,NO,NO,NO,NO,,,,,,,
+public,payments,TABLE,5,amount,"numeric(12,2)",NO,,NO,NO,NO,NO,,,,,,,
+public,payments,TABLE,6,status,character varying(20),NO,,NO,NO,NO,NO,,,,,,,
+public,payments,TABLE,7,card_last4,character(4),YES,,NO,NO,NO,NO,,,,,,,
+public,payments,TABLE,8,paid_at,timestamp with time zone,YES,,NO,NO,NO,NO,,,,,,,
+public,product_tags,TABLE,1,product_id,bigint,NO,,YES,NO,NO,YES,product_tags_product_id_fkey,public,products,id,,,
+public,product_tags,TABLE,2,tag_id,integer,NO,,YES,NO,NO,NO,product_tags_tag_id_fkey,public,tags,id,,,
+public,products,TABLE,1,id,bigint,NO,nextval('public.products_id_seq'::regclass),YES,NO,YES,YES,,,,,,,
+public,products,TABLE,2,category_id,integer,YES,,NO,NO,NO,NO,products_category_id_fkey,public,categories,id,,,
+public,products,TABLE,3,sku,character varying(64),NO,,NO,YES,NO,YES,,,,,,,
+public,products,TABLE,4,name,character varying(200),NO,,NO,NO,NO,NO,,,,,,,
+public,products,TABLE,5,description,text,YES,,NO,NO,NO,NO,,,,,,,
+public,products,TABLE,6,price,double precision,NO,,NO,NO,NO,NO,,,,,,Unit price in the product currency.,
+public,products,TABLE,7,currency,character(3),NO,'USD'::bpchar,NO,NO,NO,NO,,,,,,,
+public,products,TABLE,8,stock_quantity,integer,NO,0,NO,NO,NO,NO,,,,,,,
+public,products,TABLE,9,attributes,jsonb,YES,,NO,NO,NO,NO,,,,,,,
+public,products,TABLE,10,is_active,boolean,NO,true,NO,NO,NO,NO,,,,,,,
+public,products,TABLE,11,created_at,timestamp without time zone,NO,now(),NO,NO,NO,NO,,,,,,,
+public,reviews,TABLE,1,id,bigint,NO,,YES,NO,NO,YES,,,,,,,
+public,reviews,TABLE,2,product_id,bigint,NO,,NO,NO,NO,NO,,,,,,,
+public,reviews,TABLE,3,customer_id,bigint,YES,,NO,NO,NO,NO,,,,,,,
+public,reviews,TABLE,4,rating,smallint,NO,,NO,NO,NO,NO,,,,,,,
+public,reviews,TABLE,5,body,text,YES,,NO,NO,NO,NO,,,,,,,
+public,reviews,TABLE,6,created_at,timestamp with time zone,NO,now(),NO,NO,NO,NO,,,,,,,
+public,tags,TABLE,1,id,integer,NO,,YES,NO,NO,YES,,,,,,,
+public,tags,TABLE,2,name,character varying(50),NO,,NO,NO,NO,NO,,,,,,,

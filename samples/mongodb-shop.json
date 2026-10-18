@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "shop",
+  "description": "MongoDB database shop sampled on 2026-10-18T15:50:04.379Z (up to 500 documents per collection).",
+  "x-source": "mongodb",
+  "$defs": {
+    "users": {
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "x-presence": 1
+        },
+        "email": {
+          "bsonType": "string",
+          "x-presence": 1
+        },
+        "name": {
+          "bsonType": "object",
+          "x-presence": 1,
+          "properties": {
+            "first": {
+              "bsonType": "string",
+              "x-presence": 1
+            },
+            "last": {
+              "bsonType": "string",
+              "x-presence": 1
+            }
+          },
+          "required": [
+            "first",
+            "last"
+          ]
+        },
+        "role": {
+          "bsonType": "string",
+          "x-presence": 1,
+          "enum": [
+            "customer",
+            "admin",
+            "support"
+          ]
+        },
+        "createdAt": {
+          "bsonType": "date",
+          "x-presence": 1
+        },
+        "marketingOptIn": {
+          "bsonType": "bool",
+          "x-presence": 1
+        },
+        "phone": {
+          "bsonType": "string",
+          "x-presence": 0.65
+        }
+      },
+      "required": [
+        "email",
+        "role"
+      ],
+      "x-validator": true,
+      "description": "Shop customers and staff accounts.",
+      "x-collection": true,
+      "x-document-count": 12840,
+      "x-sampled": 40,
+      "x-indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "email_1",
+          "key": {
+            "email": 1
+          },
+          "unique": true
+        }
+      ]
+    },
+    "products": {
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "x-presence": 1
+        },
+        "sku": {
+          "bsonType": "string",
+          "x-presence": 1
+        },
+        "title": {
+          "bsonType": "string",
+          "x-presence": 1
+        },
+        "price": {
+          "bsonType": "decimal",
+          "x-presence": 1
+        },
+        "tags": {
+          "bsonType": "array",
+          "x-presence": 1,
+          "items": {
+            "bsonType": "string"
+          }
+        },
+        "stock": {
+          "bsonType": "int",
+          "x-presence": 1
+        },
+        "categoryId": {
+          "bsonType": "objectId",
+          "x-presence": 1
+        },
+        "discontinued": {
+          "bsonType": "bool",
+          "x-presence": 0.2
+        }
+      },
+      "required": [
+        "_id",
+        "sku",
+        "title",
+        "price",
+        "tags",
+        "stock",
+        "categoryId"
+      ],
+      "x-collection": true,
+      "x-document-count": 3120,
+      "x-sampled": 30,
+      "x-indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "sku_1",
+          "key": {
+            "sku": 1
+          },
+          "unique": true
+        }
+      ]
+    },
+    "orders": {
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "x-presence": 1
+        },
+        "userId": {
+          "bsonType": "objectId",
+          "x-presence": 1
+        },
+        "status": {
+          "bsonType": "string",
+          "x-presence": 1
+        },
+        "items": {
+          "bsonType": "array",
+          "x-presence": 1,
+          "items": {
+            "bsonType": "object",
+            "properties": {
+              "productId": {
+                "bsonType": "objectId",
+                "x-presence": 1
+              },
+              "qty": {
+                "bsonType": "int",
+                "x-presence": 1
+              },
+              "unitPrice": {
+                "bsonType": "double",
+                "x-presence": 1
+              }
+            },
+            "required": [
+              "productId",
+              "qty",
+              "unitPrice"
+            ]
+          }
+        },
+        "shipping": {
+          "bsonType": "object",
+          "x-presence": 1,
+          "properties": {
+            "street": {
+              "bsonType": "string",
+              "x-presence": 1
+            },
+            "city": {
+              "bsonType": "string",
+              "x-presence": 1
+            },
+            "postalCode": {
+              "bsonType": "string",
+              "x-presence": 1
+            },
+            "country": {
+              "bsonType": "string",
+              "x-presence": 1
+            }
+          },
+          "required": [
+            "street",
+            "city",
+            "postalCode",
+            "country"
+          ]
+        },
+        "total": {
+          "bsonType": "double",
+          "x-presence": 1
+        },
+        "placedAt": {
+          "bsonType": "date",
+          "x-presence": 1
+        },
+        "deliveredAt": {
+          "bsonType": "date",
+          "x-presence": 0.25
+        }
+      },
+      "required": [
+        "_id",
+        "userId",
+        "status",
+        "items",
+        "shipping",
+        "total",
+        "placedAt"
+      ],
+      "x-collection": true,
+      "x-document-count": 98234,
+      "x-sampled": 60,
+      "x-indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        },
+        {
+          "name": "userId_1_placedAt_-1",
+          "key": {
+            "userId": 1,
+            "placedAt": -1
+          },
+          "unique": false
+        }
+      ]
+    },
+    "categories": {
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "x-presence": 1
+        },
+        "name": {
+          "bsonType": "string",
+          "x-presence": 1
+        },
+        "slug": {
+          "bsonType": "string",
+          "x-presence": 1
+        }
+      },
+      "required": [
+        "_id",
+        "name",
+        "slug"
+      ],
+      "x-collection": true,
+      "x-document-count": 6,
+      "x-sampled": 6,
+      "x-indexes": [
+        {
+          "name": "_id_",
+          "key": {
+            "_id": 1
+          },
+          "unique": false
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/library.schema.json",
+  "title": "Library",
+  "description": "Data contract for the public library lending API.",
+  "$defs": {
+    "Book": {
+      "type": "object",
+      "description": "A title in the catalogue. Physical items are tracked separately as copies.",
+      "required": ["id", "isbn", "title", "authorIds"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "isbn": { "type": "string", "pattern": "^97[89][0-9]{10}$", "description": "13-digit ISBN" },
+        "title": { "type": "string", "maxLength": 300 },
+        "authorIds": { "type": "array", "items": { "type": "string", "format": "uuid" } },
+        "publisher": { "$ref": "#/$defs/Publisher" },
+        "publishedYear": { "type": "integer", "minimum": 1450 },
+        "language": { "type": "string", "enum": ["en", "es", "fr", "de", "hi"] },
+        "genres": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Author": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "name": { "type": "string" },
+        "birthYear": { "type": ["integer", "null"] },
+        "website": { "type": "string", "format": "uri" }
+      }
+    },
+    "Publisher": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "country": { "type": "string", "maxLength": 2 }
+      }
+    },
+    "Copy": {
+      "type": "object",
+      "description": "A physical copy of a book on a shelf.",
+      "required": ["id", "bookId", "branch", "condition"],
+      "properties": {
+        "id": { "type": "integer" },
+        "bookId": { "type": "string", "format": "uuid" },
+        "branch": { "type": "string" },
+        "condition": { "type": "string", "enum": ["new", "good", "worn", "damaged", "lost"] },
+        "acquiredOn": { "type": "string", "format": "date" }
+      }
+    },
+    "Member": {
+      "type": "object",
+      "required": ["id", "email", "fullName", "address"],
+      "properties": {
+        "id": { "type": "integer" },
+        "email": { "type": "string", "format": "email" },
+        "fullName": { "type": "string" },
+        "dateOfBirth": { "type": "string", "format": "date" },
+        "address": {
+          "type": "object",
+          "properties": {
+            "street": { "type": "string" },
+            "city": { "type": "string" },
+            "postalCode": { "type": "string" }
+          }
+        },
+        "membershipTier": { "type": "string", "enum": ["basic", "plus", "family"], "default": "basic" }
+      }
+    },
+    "Loan": {
+      "type": "object",
+      "required": ["id", "copyId", "memberId", "borrowedAt", "dueOn"],
+      "properties": {
+        "id": { "type": "integer" },
+        "copyId": { "type": "integer" },
+        "memberId": { "type": "integer" },
+        "borrowedAt": { "type": "string", "format": "date-time" },
+        "dueOn": { "type": "string", "format": "date" },
+        "returnedAt": { "type": ["string", "null"], "format": "date-time" },
+        "lateFee": { "type": "number", "description": "Fee charged when returned late, in the branch currency." }
+      }
+    }
+  }
+}
